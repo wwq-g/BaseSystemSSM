@@ -27,8 +27,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public int del(Long id) {
-        return roleDao.del(id);
+    public int delete(Long id) {
+        return roleDao.delete(id);
     }
 
     @Override

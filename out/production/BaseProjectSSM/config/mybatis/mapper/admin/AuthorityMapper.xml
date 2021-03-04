@@ -18,8 +18,8 @@
     <!--    权限信息搜索查询-->
     <select id="findListByRoleId" parameterType="Long" resultType="Authority">
         select * from authority
-        <if test="roleId != null">
-              where roleId = #{roleId}
+        <if test="_parameter != null">
+                where roleId = #{roleId}
         </if>
     </select>
 

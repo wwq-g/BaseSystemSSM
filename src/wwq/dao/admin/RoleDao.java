@@ -13,7 +13,7 @@ public interface RoleDao {
 
     public int edit(Role role);
 
-    public int del(Long id);
+    public int delete(Long id);
 
     public List<Role> findList(Map<String,Object> queryMap);
 

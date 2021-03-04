@@ -33,7 +33,7 @@
         update role set name = #{name},remark = #{remark} where id = #{id}
     </update>
     <!-- 删除角色信息 -->
-    <delete id="del" parameterType="Long">
+    <delete id="delete" parameterType="Long">
         delete from role where id = #{id}
     </delete>
 </mapper>

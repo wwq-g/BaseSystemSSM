@@ -4,6 +4,7 @@ package wwq.controller.admin;
 import com.github.pagehelper.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -139,7 +140,7 @@ public class RoleController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/del",method = RequestMethod.POST)
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @ResponseBody
     public Map<String, String> delete(
             @RequestParam(name="id",required=true) Long id
@@ -152,7 +153,7 @@ public class RoleController {
         }
 
         try {
-            if(roleService.del(id) <= 0){
+            if(roleService.delete(id) <= 0){
                 ret.put("type", "error");
                 ret.put("msg", "删除失败，请联系管理员!");
                 return ret;
@@ -180,6 +181,65 @@ public class RoleController {
         queryMap.put("pageSize",99999);
         return menuService.findList(queryMap);
     }
+
+
+
+
+    /**
+     * 添加权限
+     * @param ids
+     * @return
+     */
+    @RequestMapping(value="/add_authority",method=RequestMethod.POST)
+    @ResponseBody
+    public Map<String, String> addAuthority(
+            @RequestParam(name="ids",required=true) String ids,
+            @RequestParam(name="roleId",required=true) Long roleId
+    ){
+        Map<String,String> ret = new HashMap<String, String>();
+        if(StringUtils.isEmpty(ids)){
+            ret.put("type", "error");
+            ret.put("msg", "请选择相应的权限！");
+            return ret;
+        }
+        if(roleId == null){
+            ret.put("type", "error");
+            ret.put("msg", "请选择相应的角色！");
+            return ret;
+        }
+        if(ids.contains(",")){
+            ids = ids.substring(0,ids.length()-1);
+        }
+        String[] idArr = ids.split(",");
+        if(idArr.length > 0){
+            authorityService.deleteByRoleId(roleId);
+        }
+        for(String id:idArr){
+            Authority authority = new Authority();
+            authority.setMenuId(Long.valueOf(id));
+            authority.setRoleId(roleId);
+            authorityService.add(authority);
+        }
+        ret.put("type", "success");
+        ret.put("msg", "权限编辑成功！");
+        return ret;
+    }
+
+    /**
+     * 获取某个角色的所有权限
+     * @param roleId
+     * @return
+     */
+    @RequestMapping(value="/get_role_authority",method=RequestMethod.POST)
+    @ResponseBody
+    public List<Authority> getRoleAuthority(
+            @RequestParam(name="roleId",required=true) Long roleId
+    ){
+        return authorityService.findListByRoleId(roleId);
+    }
+
+
+
 
 
 }
